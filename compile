@@ -1,0 +1,107 @@
+#!/bin/bash
+# latexコンパイル用スクリプト
+
+
+function findTarget() {
+  # コンパイル対象を見つける
+  target=`grep documentclass -rl src/`
+  target=`basename $target`
+  echo $target
+}
+
+function linkTexFiles() {
+  # .texファイルのシンボリックリンクを作る
+  for texfile in `ls src/*.tex`; do
+    ln -s ../$texfile build/`basename $texfile`
+  done
+}
+
+function linkBibFile() {
+  # .bibファイルのシンボリックリンクを作る
+  for bibfile in `ls src/*.bib`; do
+    ln -s ../$bibfile build/`basename $bibfile`
+  done
+}
+
+function linkImgDir() {
+  # 画像用ディレクトリのシンボリックリンクを作る
+  ln -s ../src/imgs/ build/imgs
+}
+
+function makeLinks() {
+  linkTexFiles
+  linkBibFile
+  linkImgDir
+}
+
+function extractBB() {
+  # png, jpg等の画像ファイルのBoundingBox情報を生成する
+  cd ./imgs
+  for img in `ls *`; do
+    if [[ !${img##*.} == ".xbb" ]]; then
+      extractbb $img
+    fi
+  done
+  cd ..
+}
+
+function isSuccess() {
+  target=`basename $1 .tex`.log
+  text="No pages of output."
+  if [[ `tail $target -n 1` == $text ]]; then
+    echo 0
+  else
+    echo 1
+  fi
+}
+
+function compile() {
+  cd build/
+  extractBB
+
+  ptex2pdf -u -l -ot "-halt-on-error -interaction=nonstopmode" $1
+  # エラーが出たら止める
+  if [[ `isSuccess $1` == 0 ]]; then
+    echo "Compile failed!"
+    exit 1
+  fi
+
+  aux=`basename $1 .tex`
+  pbibtex $aux.aux
+
+  for((i=0 ; i<3 ; i++))
+  do
+    ptex2pdf -u -l -ot "-halt-on-error -interaction=nonstopmode" $1
+  done
+}
+
+function main() {
+  target=`findTarget`
+  echo "Compile $target"
+
+  # 作業用ディレクトリ
+  mkdir -p build/
+
+  # シンボリックリンクを貼る
+  if [ ! -L build/$target ]; then
+    makeLinks
+  fi
+
+  # 環境変数を加える
+  export TEXINPUTS=`pwd`/texmf//:
+
+  compile $target
+}
+
+# オプションなしでコンパイル
+if [[ $# == 0 ]]; then
+  main
+  exit 1
+fi
+
+# make clean的なの
+if [ $1 = "clean" -a -d ./build ]; then
+  rm -rf ./build/
+else
+  echo "build directory is not found."
+fi

@@ -1,0 +1,90 @@
+% -*- coding: utf-8 -*-
+\documentclass[uplatex]{jsarticle}
+\和暦
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{graphicx}
+\usepackage[noalphabet]{pxchfon}
+\setminchofont{ipam.ttf}
+\setgothicfont{ipag.ttf}
+\usepackage{amssymb, amsmath}
+\usepackage[at]{easylist}
+
+
+\begin{document}
+\title{\Huge \LaTeX 記述例}
+\author{shidaru}
+\date{\today}
+\maketitle
+
+\section{はじめに}
+\LaTeX の例（日本語用）
+
+\subsection{箇条書き}
+\begin{itemize}
+  \item item1
+  \item item2
+  \item ...
+  \item itemN
+\end{itemize}
+
+\begin{easylist}
+ @ 北日本
+ @@ 北海道
+ @@ 東北
+ @@@ 宮城
+ @@@ 山形
+ @ 東日本
+\end{easylist}
+
+\subsection{数式}
+\begin{equation}
+  x^2 - 6x + 1 = 0
+\end{equation}
+
+\begin{eqnarray}
+  2x_1 + x_2 & = & 5 \\
+  2x_2 & = & 2
+\end{eqnarray}
+
+\begin{eqnarray}
+  2x_1 + x_2 & = & 5 \nonumber \\
+  2x_2 & = & 2
+\end{eqnarray}
+
+\subsection{表}
+\begin{table}[htp]
+  \caption{C言語の代表的なデータの型}
+  \label{table:data_type}
+  \centering
+  \begin{tabular}{lcr}
+    \hline
+    データの型  & 宣言  &  ビット幅  \\
+    \hline \hline
+    文字型  & char  & 8 \\
+    整数型  & int   & 32 \\
+    倍精度実数型  & double  & 64 \\
+    倍々精度実数型  &  long double  &  96 \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\subsection{画像}
+\begin{figure}[htp]
+\begin{center}
+ \includegraphics[width=7cm]{imgs/latex.jpg}
+\end{center}
+ \caption{\LaTeX}
+ \label{fig:nof}
+\end{figure}
+
+
+\section{おわりに}
+参考になる：\TeX wiki\cite{tw}。
+
+% 参考文献
+% junsrt: 引用した順番に記載
+% reference: hoge.bibのhogeにあたる
+\bibliography{reference}
+\bibliographystyle{junsrt}
+
+\end{document}

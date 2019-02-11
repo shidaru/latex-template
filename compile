@@ -28,10 +28,17 @@ function linkImgDir() {
   ln -s ../src/imgs/ build/imgs
 }
 
+function linkStyFiles() {
+  for styfile in `ls texmf/*.sty`; do
+    ln -s ../$styfile build/`basename $styfile`
+  done
+}
+
 function makeLinks() {
   linkTexFiles
   linkBibFile
   linkImgDir
+  linkStyFiles
 }
 
 function extractBB() {
@@ -87,10 +94,8 @@ function main() {
     makeLinks
   fi
 
-  # 環境変数を加える
-  export TEXINPUTS=`pwd`/texmf//:
-
   compile $target
+  exit 0
 }
 
 # オプションなしでコンパイル

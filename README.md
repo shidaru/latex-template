@@ -1,13 +1,10 @@
 # latex-template
 ## Description
-Template for LaTeX and compile with Docker.
-
-# Dependency
- - Docker version >= 18.09.1
+Template for LaTeX and compile script.
 
 ## Usage
 ```
-$ ./run
+$ ./compile
 ```
 
 Compile tex file that written as "documentclass".
